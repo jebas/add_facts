@@ -12,4 +12,7 @@ describe 'add_facts entry' do
     expect(apply_manifest(pp).exit_code).to_not eq(1)
     expect(apply_manifest(pp).exit_code).to eq(0)
   end
+  describe file('/opt/puppetlabs/facter/facts.d/add_facts.txt') do
+    its(:content) {should match /foo = bar/}
+  end
 end

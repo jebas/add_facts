@@ -11,6 +11,9 @@ describe 'add_facts entry' do
       add_facts::entry { 'barney':
         value => 'betty',
       }
+      add_facts::entry { 'bambam':
+        value => 'pebbles',
+      }
     EOS
     apply_manifest(pp)
   end

@@ -15,6 +15,8 @@ RSpec.configure do |c|
       :module_name => 'add_facts',
     )
     hosts.each do |host|
+      on host, puppet('module', 'install', 'puppetlabs-inifile'),
+        {:acceptable_exit_codes => [0,1]}
     end
   end
 end

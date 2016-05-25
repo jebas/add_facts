@@ -15,6 +15,8 @@ RSpec.configure do |c|
       :module_name => 'add_facts',
     )
     hosts.each do |host|
+      write_hiera_config_on(host, ['common'])
+      copy_hiera_data_to(host, File.join(module_root, 'spec', 'fixtures'))
       on host, puppet('module', 'install', 'puppetlabs-inifile'),
         {:acceptable_exit_codes => [0,1]}
     end

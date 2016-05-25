@@ -1,8 +1,0 @@
----
-# common.yaml
-
-add_facts::entries::args:
-  lucy:
-    value: ricki
-  ethel:
-    value: fred

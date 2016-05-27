@@ -42,7 +42,9 @@
 #
 # Copyright 2016 Your name here, unless otherwise noted.
 #
-class add_facts {
+class add_facts (
+  String $directory = '/opt/puppetlabs/facter/facts.d',
+) {
 
 
 }

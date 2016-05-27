@@ -5,6 +5,7 @@ require 'spec_helper_acceptance'
 describe 'add_facts entries' do 
   it 'should run without errors' do
     pp = <<-EOS
+      class { add_facts: }
       class { 'add_facts::entries': }
     EOS
     expect(apply_manifest(pp).exit_code).to_not eq(1)

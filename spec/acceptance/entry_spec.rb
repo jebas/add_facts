@@ -5,6 +5,7 @@ require 'spec_helper_acceptance'
 describe 'add_facts entry' do
   before(:each) do 
     pp = <<-EOS
+      class { add_facts: }
       add_facts::entry { 'fred':
         value => 'wilma',
       }
@@ -33,6 +34,7 @@ describe 'add_facts entry' do
   context 'should remove facts' do
     before(:each) do
       pp = <<-EOS
+        class {'add_facts': }
         add_facts::entry { 'fred': 
           ensure => absent,
         }

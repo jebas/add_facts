@@ -14,70 +14,109 @@
 
 ## Description
 
-Start with a one- or two-sentence summary of what the module does and/or what
-problem it solves. This is your 30-second elevator pitch for your module.
-Consider including OS/Puppet version it works with.
+Add_facts could be thought of as a temporary or permanent replacement to an 
+ENC.  Though it will not handle environment changes, it will add external 
+facts stored in the hieradata so that the next pass will alter puppet's 
+behavior.
 
-You can give more descriptive information in a second paragraph. This paragraph
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?" If your module has a range of functionality (installation, configuration,
-management, etc.), this is the time to mention it.
+Like most ENCs, it can be used to provide additional information that puppet uses 
+to create a catalog.  This could include defining the application installed (web, 
+database, file server...), the application environment (prod, qa, dev...), or 
+location (London, Atlanta, downstairs...).  All of this is information that usually 
+cannot be derived from a newly installed machine.
+
+However, unlike an ENC, add_facts creates an add_facts.yaml file, and places it into
+the facts.d directory.  This allows the information to always remain with the 
+node and bed stored in the hieradata.
 
 ## Setup
 
-### What add_facts affects **OPTIONAL**
+### What add_facts affects
 
-If it's obvious what your module touches, you can skip this section. For
-example, folks can probably figure out that your mysql_instance module affects
-their MySQL instances.
+Add_facts affects the output of facter.
 
-If there's more that they should know about, though, this is the place to mention:
+After the module is applied, facter will start displaying the facts added by 
+the module.
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
+### Setup Requirements
 
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you might want to include an additional "Upgrading" section
-here.
+To make full use of add_facts, you should also make changes in your hiera
+configuration file.  If you are a fact called app to your node, you might 
+want to add an entry to the hiera.yaml that reads, '- "apps/%{facts.app}"' 
+to take advantage of the information.
 
 ### Beginning with add_facts
 
-The very basic steps needed for a user to get the module up and running. This
-can include setup steps, if necessary, or it can be an example of the most
-basic use of the module.
+Using the add_facts module involves two steps.
+
++ Use the base class to establish the facts.d directory.
++ Use the add_facts::entry or add_facts::entries to add the information.
 
 ## Usage
 
-This section is where you describe how to customize, configure, and do the
-fancy stuff with your module here. It's especially helpful if you include usage
-examples and code samples for doing things with your module.
++ Installing the base class.
+
+    The base class is used to determine the location of the facts.d directory, 
+and by default it is '/opt/puppetlabs/facter/facts.d'.  The only variable is 
+directory.  Therefore the class can be called by either 
+
+        class { 'add_facts': }
+
+    or
+
+        class { 'add_facts':
+            directory => '/etc/fact/facts.d',
+        }
+
++ Using add_facts::entry
+
+    Entry is a wrapper around ini_setting, which is used to add and remove
+the fact entries.  The following is an example entry.
+
+        add_facts::entry { 'app':
+            ensure => present,
+            value  => 'web',
+        }
+
++ Using add_facts::entries
+
+    Entries is a hieradata wrapper around entry.  It allows you enter several 
+items at once.  First enter the hieradata into an existing file.  The following 
+example could be placed into the hieradata/nodes/web10.example.com.yaml file.
+
+        classes:
+            - add_facts
+            - add_facts::entries
+
+        add_facts::entries::args:
+            app:
+                value: web
+            app_env:
+                value: qa
+
+    Of course the above example is assuming that manifest is using some 
+equivalent to hiera_include.
 
 ## Reference
 
-Here, include a complete list of your module's classes, types, providers,
-facts, along with the parameters for each. Users refer to this section (thus
-the name "Reference") to find specific details; most users don't read it per
-se.
++ Classes
+    + add_facts
+    + add_facts::entries
++ Defined Types
+    + add_facts::entry
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc. If there
-are Known Issues, you might want to include them under their own heading here.
+This module creates a two pass deployment.  The first pass adds the facts
+to the node, and the second pass creates the catalog based on the new facts.
+
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+This module was developed using beaker.  To run the tests use:
 
-## Release Notes/Contributors/Etc. **Optional**
+    rspec spec/acceptance
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You can also add any additional sections you feel
-are necessary or important to include here. Please use the `## ` header.
+## Release Notes/Contributors/Etc. 
+
+This is the initial release.

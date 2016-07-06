@@ -1,10 +1,11 @@
 # spec/acceptance/spec_helper_acceptance.rb
 
 require 'beaker-rspec'
+require 'beaker/puppet_install_helper'
 require 'pry'
 
 step "Install Puppet on each host"
-install_puppet_agent_on( hosts, { :puppet_collection => 'pc1' } )
+run_puppet_install_helper
 
 RSpec.configure do |c|
   module_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))

@@ -115,7 +115,7 @@ to the node, and the second pass creates the catalog based on the new facts.
 
 This module was developed using beaker.  To run the tests use:
 
-    rspec spec/acceptance
+    PUPPET_INSTALL_TYPE=agent rspec spec/acceptance
 
 ## Release Notes/Contributors/Etc. 
 

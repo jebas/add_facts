@@ -1,12 +1,19 @@
 {
   "name": "jebas-add_facts",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "jebas",
   "summary": "Adds facts to a node.",
   "license": "Apache-2.0",
   "source": "https://github.com/jebas/add_facts",
   "project_page": "https://github.com/jebas/add_facts",
   "issues_url": "https://github.com/jebas/add_facts/issues",
+  "tags": ["fact", "facts", "facter"],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RehHat",
+      "operatingsystemrelease": [ "7.0" ]
+    }
+  ],
   "dependencies": [
     {"name":"puppetlabs-inifile","version_requirement":"< 2.0.0"}
   ],
